@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F4EEE5">
+<title>LIVA body — 30 Day Reset</title>
+<style>
+:root{--bg:#f4eee5;--paper:#fbf8f2;--ink:#2a211b;--muted:#7b6d61;--brown:#4d3628;--line:#ddd0c1;--gold:#e8cda1}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.app{min-height:100svh;max-width:520px;margin:auto;padding:0 20px 28px}.top{height:62px;display:flex;align-items:center;justify-content:space-between}.brand{font:26px Georgia,serif;letter-spacing:.14em}.lang button{border:0;background:none;color:var(--muted);font-size:12px}.lang .on{color:var(--ink);font-weight:700}.bar{height:3px;background:#e4d9cc;border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--brown);width:0;transition:.25s}
+main{min-height:calc(100svh - 95px);display:flex;flex-direction:column;justify-content:center;padding:25px 0}.center{text-align:center}.hero{width:100%;aspect-ratio:710/1536;object-fit:cover;border-radius:26px;box-shadow:0 12px 35px #3a281c25;margin-bottom:24px}h1,h2{font-family:Georgia,serif;font-weight:400;line-height:1.08;margin:0}h1{font-size:42px}h2{font-size:31px}.eyebrow{font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-bottom:13px}p{color:var(--muted);line-height:1.55}.card{background:var(--paper);border:1px solid var(--line);border-radius:21px;padding:19px;margin-top:20px}.choice{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--paper);padding:16px;border-radius:15px;margin:9px 0;color:var(--ink);font-size:15px}.choice small{display:block;color:var(--muted);margin-top:5px}.choice.sel{border-color:var(--brown);background:#eee5d9}.choices{margin-top:19px}.inputrow{display:flex;align-items:end;gap:12px;border-bottom:1px solid var(--line);padding:9px 2px}.inputrow input{width:100%;border:0;outline:0;background:none;font:34px Georgia,serif;color:var(--ink)}.unit{color:var(--muted);font-size:13px;padding-bottom:9px}.actions{display:flex;gap:10px;margin-top:23px}.btn{flex:1;border:0;border-radius:15px;padding:16px;background:var(--brown);color:white;font-weight:700}.btn.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}.btn:disabled{opacity:.4}.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.metric{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:16px}.metric span{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}.metric b{display:block;font:27px Georgia,serif;margin-top:8px}.notice{font-size:11px;color:var(--muted);line-height:1.5;margin-top:17px}.pay{background:var(--brown);color:white;border-radius:24px;padding:24px;margin-top:18px}.pay p,.pay li{color:#eee4d8}.pay h2{color:white}.dashhead{display:flex;justify-content:space-between;align-items:end}.pill{background:#e7dacb;padding:7px 10px;border-radius:999px;font-size:10px}.meal{display:flex;justify-content:space-between;padding:15px 0;border-bottom:1px solid var(--line)}.meal:last-child{border:0}.check{font-size:20px}.hidden{display:none}footer{text-align:center;color:var(--muted);font-size:10px;margin-top:20px;line-height:1.4}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><div class="brand">LIVA</div><div class="lang"><button id="ru" onclick="language='ru';render()">RU</button> · <button id="en" onclick="language='en';render()">EN</button></div></header>
+<div class="bar"><i id="progress"></i></div>
+<main id="main"></main>
+<footer id="foot"></footer>
+</div>
+<script>
+const T={
+ru:{ey:"ПЕРСОНАЛЬНЫЙ WELLNESS",title:"Твоё тело. Твой план. Твой темп.",sub:"Пройди короткий тест, узнай свою расчётную отправную точку и получи персональный план LIVA.",start:"Начать тест",step:"ШАГ",age:"Сколько тебе лет?",sex:"Какой у тебя пол?",female:"Женщина",male:"Мужчина",height:"Какой у тебя рост?",weight:"Какой у тебя текущий вес?",goalWeight:"Какой вес — твоя цель?",activity:"Насколько ты активен(на)?",sed:"В основном малоподвижный",sed2:"Мало структурированной активности",light:"Лёгкая активность",light2:"Ходьба или 1–2 тренировки",mod:"Средняя активность",mod2:"Регулярное движение или 3–4 тренировки",very:"Высокая активность",very2:"Интенсивные тренировки / очень активный образ жизни",exercise:"Как часто ты тренируешься?",none:"Не тренируюсь",one:"1–2 раза в неделю",three:"3–4 раза в неделю",five:"5+ раз в неделю",goal:"Что для тебя сейчас важнее всего?",lose:"Снизить вес",tone:"Стать стройнее и подтянутее",habit:"Сформировать полезные привычки",routine:"Наладить общий режим",food:"Как ты предпочитаешь питаться?",all:"Без ограничений",protein:"С акцентом на белок",veg:"Вегетарианское питание",flex:"Гибко / без особых предпочтений",next:"Продолжить",back:"Назад",calc:"Рассчитать мой план",analyze:"Анализируем твои ответы…",ready:"ТВОЙ ПЛАН LIVA ГОТОВ",startpoint:"Твоя расчётная отправная точка",maint:"Поддерживающая норма",range:"Стартовый диапазон",bmi:"ИМТ",unlock:"Открыть LIVA 30-Day Reset — $9.99",free:"Тест бесплатный. Оплата только за программу.",planTitle:"LIVA 30-DAY RESET",planSub:"30 дней питания, движения и привычек — в одном понятном плане.",inside:"Внутри программы",items:["30-дневная структура питания","Простые рецепты и замены продуктов","Домашние тренировки и цели по движению","Трекер воды, привычек и прогресса"],buy:"Получить мой план — $9.99",demo:"Демо-режим: оплата пока не подключена.",dashboard:"МОЙ LIVA PLAN",day:"ДЕНЬ",today:"Сегодня",cal:"Цель по калориям",water:"Вода",steps:"Шаги",workout:"Тренировка",done:"Готово",restart:"Пройти тест заново",note:"Расчёты ориентировочные и предназначены для взрослых. ИМТ — скрининговый показатель, а не диагноз. При беременности/грудном вскармливании, истории расстройств пищевого поведения или состояниях, влияющих на вес, нужен квалифицированный специалист.",invalid:"Пожалуйста, введи корректное значение."},
+en:{ey:"PERSONAL WELLNESS",title:"Your body. Your plan. Your pace.",sub:"Take a short assessment, discover your estimated starting point and get your personalized LIVA plan.",start:"Start assessment",step:"STEP",age:"How old are you?",sex:"What is your sex?",female:"Female",male:"Male",height:"What is your height?",weight:"What is your current weight?",goalWeight:"What is your goal weight?",activity:"How active are you?",sed:"Mostly sedentary",sed2:"Little structured activity",light:"Lightly active",light2:"Walking or 1–2 workouts",mod:"Moderately active",mod2:"Regular movement or 3–4 workouts",very:"Very active",very2:"Intensive training / highly active",exercise:"How often do you exercise?",none:"I don't exercise",one:"1–2 times a week",three:"3–4 times a week",five:"5+ times a week",goal:"What matters most to you?",lose:"Lose weight",tone:"Get leaner & more toned",habit:"Build healthier habits",routine:"Improve my overall routine",food:"How do you prefer to eat?",all:"No restrictions",protein:"High-protein",veg:"Vegetarian",flex:"Flexible / no preference",next:"Continue",back:"Back",calc:"Calculate my plan",analyze:"Analyzing your answers…",ready:"YOUR LIVA PLAN IS READY",startpoint:"Your estimated starting point",maint:"Estimated maintenance",range:"LIVA starting range",bmi:"BMI",unlock:"Unlock LIVA 30-Day Reset — $9.99",free:"The assessment is free. You only pay for the program.",planTitle:"LIVA 30-DAY RESET",planSub:"30 days of nutrition, movement and habits in one simple plan.",inside:"What's inside",items:["30-day nutrition structure","Simple recipes & food swaps","Home workouts & movement goals","Water, habit & progress tracker"],buy:"Get my plan — $9.99",demo:"Demo mode: payment is not connected yet.",dashboard:"MY LIVA PLAN",day:"DAY",today:"Today",cal:"Calorie target",water:"Water",steps:"Steps",workout:"Workout",done:"Done",restart:"Retake assessment",note:"Estimates are for adults and are not medical advice. BMI is a screening measure, not a diagnosis. Pregnancy/breastfeeding, eating-disorder history or medical conditions affecting weight require a qualified professional.",invalid:"Please enter a valid value."}
+};
+let language="ru", step=0, a={}, result=null;
+const q=[
+ ["age","num"],["sex","sex"],["height","num"],["weight","num"],["goalWeight","num"],["activity","activity"],["exercise","exercise"],["goal","goal"],["food","food"]
+];
+function t(k){return T[language][k]}
+function render(){
+ document.getElementById("ru").className=language==="ru"?"on":"";
+ document.getElementById("en").className=language==="en"?"on":"";
+ document.getElementById("progress").style.width=(step===0?0:step===10?100:step/9*100)+"%";
+ if(step===0)return home();
+ if(step===10)return resultScreen();
+ if(step===11)return paywall();
+ if(step===12)return dashboard();
+ question();
+}
+function home(){
+ document.getElementById("main").innerHTML=`<div class="center"><img class="hero" src="liva-logo.jpg"><div class="eyebrow">${t("ey")}</div><h1>${t("title")}</h1><p>${t("sub")}</p><button class="btn" onclick="step=1;render()">${t("start")} →</button><footer>2–3 min • RU / EN • LIVA</footer></div>`;
+}
+function question(){
+ const [key,type]=q[step-1];
+ let body="";
+ if(type==="num"){
+  const labels={age:"age",height:"cm",weight:"kg",goalWeight:"kg"};
+  body=`<div class="card"><div class="inputrow"><input id="inp" type="number" inputmode="decimal" value="${a[key]??""}" autofocus><div class="unit">${labels[key]}</div></div></div>`;
+ } else {
+  let opts=[];
+  if(type==="sex")opts=[["female"],["male"]];
+  if(type==="activity")opts=[["sed","sed2"],["light","light2"],["mod","mod2"],["very","very2"]];
+  if(type==="exercise")opts=[["none"],["one"],["three"],["five"]];
+  if(type==="goal")opts=[["lose"],["tone"],["habit"],["routine"]];
+  if(type==="food")opts=[["all"],["protein"],["veg"],["flex"]];
+  body=`<div class="choices">${opts.map(o=>`<button class="choice ${a[key]===o[0]?"sel":""}" onclick="a['${key}']='${o[0]}';render()">${t(o[0])}${o[1]?`<small>${t(o[1])}</small>`:""}</button>`).join("")}</div>`;
+ }
+ const title=t(key==="age"?"age":key);
+ document.getElementById("main").innerHTML=`<div><div class="eyebrow">${t("step")} ${step} / 9</div><h2>${title}</h2>${body}<div class="actions"><button class="btn alt" onclick="prev()">${t("back")}</button><button class="btn" onclick="next()">${step===9?t("calc"):t("next")}</button></div></div>`;
+ if(type==="num")document.getElementById("inp").onkeydown=e=>e.key==="Enter"&&next();
+}
+function prev(){if(step>1){step--;render()}else{step=0;render()}}
+function next(){
+ const [key,type]=q[step-1];
+ if(type==="num"){let v=+document.getElementById("inp").value;if(!v){alert(t("invalid"));return}
+  const limits={age:[18,50],height:[130,230],weight:[35,250],goalWeight:[35,250]}[key];
+  if(v<limits[0]||v>limits[1]){alert(t("invalid"));return}a[key]=v;
+ } else if(!a[key]){alert(t("invalid"));return}
+ if(step<9){step++;render()}else{step=10;result=calc();render()}
+}
+function calc(){
+ const h=a.height/100,w=a.weight,age=a.age;
+ const bmi=w/(h*h);
+ const bmr=a.sex==="female"?10*w+6.25*a.height-5*age-161:10*w+6.25*a.height-5*age+5;
+ const f={sed:1.2,light:1.375,mod:1.55,very:1.725}[a.activity];
+ const maintenance=Math.round((bmr*f)/50)*50;
+ const target=Math.max(a.sex==="female"?1200:1500,Math.round(maintenance*.85/50)*50);
+ return {bmi,maintenance,target,upper:target+100};
+}
+function resultScreen(){
+ const r=result;
+ document.getElementById("main").innerHTML=`<div><div class="eyebrow">${t("ready")}</div><h2>${t("startpoint")}</h2>
+ <div class="metrics"><div class="metric"><span>${t("bmi")}</span><b>${r.bmi.toFixed(1)}</b></div><div class="metric"><span>${t("maint")}</span><b>${r.maintenance}</b></div></div>
+ <div class="card"><div class="eyebrow">${t("range")}</div><h2>${r.target}–${r.upper} <small style="font:15px -apple-system;color:var(--muted)">kcal/day</small></h2><p>${language==="ru"?"Умеренная расчётная отправная точка для постепенного контроля веса.":"A moderate estimated starting point for gradual weight management."}</p></div>
+ <div class="notice">${t("note")}</div>
+ <div class="actions"><button class="btn alt" onclick="step=0;a={};render()">${t("restart")}</button><button class="btn" onclick="step=11;render()">${t("unlock")}</button></div></div>`;
+}
+function paywall(){
+ document.getElementById("main").innerHTML=`<div><div class="eyebrow">LIVA</div><h2>${t("planTitle")}</h2><p>${t("planSub")}</p><div class="pay"><h2>$9.99</h2><p>${t("inside")}</p><ul>${t("items").map(x=>`<li style="margin:10px 0">${x}</li>`).join("")}</ul><button class="btn" style="background:#e7c996;color:#2a211b" onclick="step=12;render()">${t("buy")}</button></div><div class="notice">${t("free")}<br>${t("demo")}</div></div>`;
+}
+const PROGRAM = [
+["Greek yogurt + berries + oats","Chicken rice bowl + vegetables","Apple + yogurt","Salmon + potatoes + salad","Full body • 20 min"],
+["Eggs + whole-grain toast + fruit","Turkey wrap + salad","Banana + nuts","Chicken pasta + vegetables","Walk • 30 min"],
+["Overnight oats + yogurt","Tuna potato salad","Fruit + cottage cheese","Beef/soy stir-fry + rice","Lower body • 20 min"],
+["Cottage cheese bowl + fruit","Chicken quinoa bowl","Yogurt + berries","Salmon + couscous + vegetables","Walk • 35 min"],
+["Egg & avocado toast","Lentil soup + bread + salad","Fruit + yogurt","Chicken fajita bowl","Full body • 25 min"],
+["Oatmeal + banana + yogurt","Turkey/chickpea sandwich + salad","Nuts + fruit","Fish tacos + cabbage slaw","Mobility • 15 min"],
+["Greek yogurt bowl + granola","Chicken rice bowl","Fruit + yogurt","Roast chicken + potatoes + vegetables","Recovery walk • 30 min"],
+["Eggs + toast + fruit","Tuna/chickpea wrap","Yogurt + berries","Turkey meatballs + pasta + vegetables","Lower body • 25 min"],
+["Overnight oats + apple","Chicken quinoa salad","Banana + nuts","Salmon + rice + broccoli","Walk • 35 min"],
+["Cottage cheese + berries + oats","Lentil bowl + vegetables","Fruit + yogurt","Chicken stir-fry + rice","Full body • 25 min"],
+["Egg & avocado toast","Turkey wrap + salad","Yogurt + fruit","Beef/soy bowl + rice + vegetables","Walk • 30 min"],
+["Oatmeal + berries + yogurt","Tuna potato salad","Apple + nuts","Chicken pasta + salad","Upper body • 20 min"],
+["Greek yogurt + banana + oats","Chicken rice bowl + vegetables","Cottage cheese + fruit","Fish + potatoes + salad","Recovery walk • 30 min"],
+["Eggs + whole-grain toast","Chickpea quinoa bowl","Fruit + yogurt","Chicken fajitas + rice","Full body • 25 min"],
+["Overnight oats + berries","Turkey sandwich + salad","Banana + nuts","Salmon + couscous + vegetables","Walk • 35 min"],
+["Cottage cheese bowl + fruit","Lentil soup + toast","Yogurt + berries","Chicken + potatoes + vegetables","Lower body • 25 min"],
+["Egg & avocado toast","Chicken quinoa bowl","Fruit + cottage cheese","Fish tacos + slaw","Mobility • 15 min"],
+["Oatmeal + banana + yogurt","Tuna/chickpea wrap","Apple + yogurt","Turkey meatballs + pasta + vegetables","Full body • 25 min"],
+["Greek yogurt + berries + oats","Chicken rice bowl","Fruit + nuts","Salmon + potatoes + vegetables","Walk • 40 min"],
+["Eggs + toast + fruit","Turkey/bean salad bowl","Yogurt + berries","Chicken stir-fry + rice","Lower body • 25 min"],
+["Overnight oats + yogurt","Lentil quinoa bowl","Banana + nuts","Fish + couscous + vegetables","Recovery walk • 30 min"],
+["Cottage cheese + fruit + oats","Chicken wrap + salad","Fruit + yogurt","Beef/soy stir-fry + rice","Full body • 25 min"],
+["Egg & avocado toast","Tuna potato salad","Apple + nuts","Chicken pasta + vegetables","Walk • 35 min"],
+["Oatmeal + berries + yogurt","Chickpea rice bowl","Cottage cheese + fruit","Salmon + potatoes + salad","Mobility • 15 min"],
+["Greek yogurt bowl + banana","Turkey wrap + vegetables","Yogurt + berries","Chicken fajita bowl","Full body • 25 min"],
+["Eggs + toast + fruit","Chicken quinoa salad","Fruit + nuts","Fish tacos + slaw","Walk • 40 min"],
+["Overnight oats + apple","Lentil soup + salad + bread","Banana + yogurt","Turkey meatballs + pasta","Lower body • 25 min"],
+["Cottage cheese + berries + oats","Chicken rice bowl","Fruit + nuts","Salmon + vegetables + potatoes","Recovery walk • 30 min"],
+["Egg & avocado toast","Tuna/chickpea wrap + salad","Yogurt + fruit","Chicken stir-fry + rice","Full body • 25 min"],
+["Oatmeal + banana + yogurt","Turkey/bean bowl + vegetables","Fruit + cottage cheese","Roast chicken + potatoes + salad","Walk • 40 min"]
+];
+
+function dashboard(){
+ const r=result;
+ const day=+localStorage.getItem("livaDay")||1;
+ const d=PROGRAM[day-1];
+ const waterDone=localStorage.getItem("livaWater"+day)==="1";
+ const workoutDone=localStorage.getItem("livaWorkout"+day)==="1";
+ const meal=d.slice(0,4);
+ document.getElementById("main").innerHTML=`
+ <div>
+  <div class="dashhead">
+   <div><div class="eyebrow">${t("dashboard")}</div><h2>${t("day")} ${String(day).padStart(2,"0")} / 30</h2></div>
+   <span class="pill">${a.goal==="tone"?t("tone"):t("lose")}</span>
+  </div>
+  <div class="card">
+   <div class="eyebrow">${t("today")}</div>
+   <div class="meal"><span>${t("cal")}</span><b>${r.target}–${r.upper} kcal</b></div>
+   <div class="meal"><span>${t("water")}</span><button class="choice" style="width:auto;margin:0;padding:8px 12px" onclick="toggleCheck('water',${day})">${waterDone?"✓":"○"} 2.0 L</button></div>
+   <div class="meal"><span>${t("steps")}</span><b>${day%3===0?"8,000":"7,000"}</b></div>
+   <div class="meal"><span>${t("workout")}</span><button class="choice" style="width:auto;margin:0;padding:8px 12px" onclick="toggleCheck('workout',${day})">${workoutDone?"✓":"○"} ${d[4]}</button></div>
+  </div>
+  <div class="card">
+   <div class="eyebrow">${language==="ru"?"Питание на сегодня":"Today's meals"}</div>
+   <div class="meal"><span>Breakfast</span><b>${meal[0]}</b></div>
+   <div class="meal"><span>Lunch</span><b>${meal[1]}</b></div>
+   <div class="meal"><span>Snack</span><b>${meal[2]}</b></div>
+   <div class="meal"><span>Dinner</span><b>${meal[3]}</b></div>
+  </div>
+  <div class="card">
+   <div class="eyebrow">${language==="ru"?"Правило LIVA":"LIVA rule"}</div>
+   <p style="margin:0">${language==="ru"?"Не нужно есть идеально. Собирай день из обычных продуктов, держи порции разумными и возвращайся к плану после любого сбоя.":"You don't need a perfect day. Use ordinary foods, keep portions reasonable, and return to the plan after a setback."}</p>
+  </div>
+  <div class="actions">
+   <button class="btn alt" onclick="changeDay(-1)">←</button>
+   <button class="btn" onclick="changeDay(1)">${language==="ru"?"Следующий день →":"Next day →"}</button>
+  </div>
+  <button class="btn alt" style="margin-top:12px;width:100%" onclick="step=0;a={};render()">${t("restart")}</button>
+  <div class="notice">${t("note")}</div>
+ </div>`;
+}
+function toggleCheck(type,day){
+ const k="liva"+(type==="water"?"Water":"Workout")+day;
+ localStorage.setItem(k,localStorage.getItem(k)==="1"?"0":"1");
+ render();
+}
+function changeDay(delta){
+ let d=+localStorage.getItem("livaDay")||1;
+ d=Math.min(30,Math.max(1,d+delta));
+ localStorage.setItem("livaDay",d);
+ render();
+}
+render();
+</script>
+</body>
+</html>
